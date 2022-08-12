@@ -21,21 +21,28 @@ class Game:
 
     def run(self):
         while self._num_passes < 2:
-            move = self.players[self.state.to_play].get_move(self.state.copy())
 
-            if move is not None:
-                try:
+            try:
+
+                move = self.players[self.state.to_play].get_move(self.state.copy())
+                if move is not None:
                     self.state.play(move[0], move[1])
-                except IllegalMoveError:
-                    print("Illegal move by {}".format(type(self.players[self.state.to_play]).__name__))
-                    self.winner = self.players[self.state.get_not_to_play()]
-                    return
+                    self._num_passes = 0
+                else:
+                    self.state.pass_play()
+                    self._num_passes += 1
 
-                self._num_passes = 0
-            else:
-                self.state.pass_play()
-                self._num_passes += 1
-
+            except IllegalMoveError:
+                print("Illegal move by {}".format(type(self.players[self.state.to_play]).__name__))
+                self.winner = self.players[self.state.get_not_to_play()]
+                return
+            except Exception as e:
+                print("{} had the following error:".format(type(self.players[self.state.to_play]).__name__))
+                print(e)
+                self.winner = self.players[self.state.get_not_to_play()]
+                return
+                
+                
         print("Game complete")
 
         # if there is a tie, player 2 wins

@@ -16,9 +16,7 @@ class State:
 
 		self._cached_enemy_groups = None
 
-	def get_not_to_play(self):
-		return 1 if self.to_play == 2 else 2
-
+	# initializes a newly created state object
 	def create_board(self):
 		self.board = [[0 for j in range(self.board_size)] for i in range(self.board_size)]
 
@@ -26,7 +24,7 @@ class State:
 
 		self.current_scores = {1:0, 2:self.komi}
 
-
+	# creates a copy of the state
 	def copy(self):
 		state_copy = State(board_size=self.board_size, komi=self.komi)
 
@@ -38,6 +36,28 @@ class State:
 
 
 		return state_copy
+
+	# returns the number of the player whose turn it is not
+	def get_not_to_play(self):
+		return 1 if self.to_play == 2 else 2
+
+	# returns the coordinates of all positions in contact with (row, col)
+	def get_positions_around(self, row, col):
+		positions = []
+
+		if row-1 >= 0:
+			positions.append((row-1, col))
+
+		if row+1 < self.board_size:
+			positions.append((row+1, col))
+
+		if col-1 >= 0:
+			positions.append((row, col-1))
+
+		if col+1 < self.board_size:
+			positions.append((row, col+1))
+
+		return positions
 
 	# return (group, liberties) for the stone at (row, col)
 	def get_group_info(self, row, col):
@@ -59,7 +79,7 @@ class State:
 			node = to_check.popleft()
 			group.add(node)
 
-			for i in self._get_positions_around(node[0], node[1]):
+			for i in self.get_positions_around(node[0], node[1]):
 				# if the stone is the same color, add to the queue
 				if self.board[i[0]][i[1]] == color and i not in group:
 					to_check.append(i)
@@ -71,27 +91,11 @@ class State:
 		return group, liberties
 
 
-
-	def _get_positions_around(self, row, col):
-		positions = []
-
-		if row-1 >= 0:
-			positions.append((row-1, col))
-
-		if row+1 < self.board_size:
-			positions.append((row+1, col))
-
-		if col-1 >= 0:
-			positions.append((row, col-1))
-
-		if col+1 < self.board_size:
-			positions.append((row, col+1))
-
-		return positions
-
+	# returns a list of info for all enemy groups in contact with a piece
+	# it is assumed that self.to_play is the current player
 	def _get_enemy_groups_around(self, row, col):
 		# get positions around which are the other color
-		positions = [(r,c) for (r,c) in self._get_positions_around(row, col) if self.board[r][c] == self.get_not_to_play()]
+		positions = [(r,c) for (r,c) in self.get_positions_around(row, col) if self.board[r][c] == self.get_not_to_play()]
 
 		contained_positions = set()
 
@@ -107,6 +111,7 @@ class State:
 
 		return group_infos
 
+	# checks if a move is legal
 	def is_legal_move(self, row, col):
 		if row < 0 or row >= self.board_size or col < 0 or col >= self.board_size:
 			return False
@@ -136,6 +141,7 @@ class State:
 
 		return True
 
+	# plays a stone at (row, col) for the current player
 	def play(self, row, col):
 		if not self.is_legal_move(row, col):
 			raise IllegalMoveError
@@ -151,9 +157,12 @@ class State:
 
 		self.pass_play()
 
+	# passes (instead of playing a stone)
 	def pass_play(self):
 		self.to_play = self.get_not_to_play()
 
+	# prints the current board
+	# (helpful for debugging)
 	def print_board(self):
 		for i in self.board:
 			for j in i:
