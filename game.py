@@ -20,7 +20,13 @@ class Game:
         self.winner = None
 
     def run(self):
+
         while self._num_passes < 2:
+
+            if self.state.stones_left[self.state.to_play] == 0:
+                self.state.pass_play()
+                self._num_passes += 1
+                continue
 
             try:
 
@@ -42,7 +48,7 @@ class Game:
                 self.winner = self.players[self.state.get_not_to_play()]
                 return
                 
-                
+
         print("Game complete")
 
         # if there is a tie, player 2 wins
