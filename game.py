@@ -48,7 +48,6 @@ class Game:
                 self.winner = self.players[self.state.get_not_to_play()]
                 return
                 
-
         print("Game complete")
 
         # if there is a tie, player 2 wins
@@ -56,9 +55,10 @@ class Game:
         self.winner = self.players[1] if self.state.current_scores[1] > self.state.current_scores[2] else self.players[2]
 
 
-from player import BasedBrady, Ryan
+from player import HumanPlayer
+from bradybots import BradyBot1_sus__amongus_moment
 
-g = Game(BasedBrady, Ryan)
+g = Game(BradyBot1_sus__amongus_moment, BradyBot1_sus__amongus_moment)
 
 g.run()
 

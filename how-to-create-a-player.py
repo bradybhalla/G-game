@@ -49,6 +49,8 @@ The (possibly) useful methods of the state object are explained below:
 
     state.copy() --- returns an exact copy of the object
 
+    state.create_board() --- initializes board and scoring
+
     state.get_not_to_play()
         - returns the number of the player whose turn it is not
         - if state.to_play is 1, this will return 2 and vice versa

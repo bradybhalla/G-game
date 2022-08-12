@@ -5,6 +5,7 @@ class Player(metaclass=ABCMeta):
     def get_move(self, state):
         pass
 
+# mostly for testing
 class HumanPlayer(Player):
     def get_move(self, state):
         print()
@@ -15,9 +16,3 @@ class HumanPlayer(Player):
         if move == "":
             return None
         return [int(i) for i in move.split(" ")]
-
-class BasedBrady(HumanPlayer):
-    pass
-
-class Ryan(HumanPlayer):
-    pass
