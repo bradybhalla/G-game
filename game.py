@@ -12,7 +12,7 @@ class Game:
         self.players[1] = first_player_object if random() < 0.5 else second_player_object
         self.players[2] = second_player_object if self.players[1] is first_player_object else first_player_object
 
-        self.state = State(board_size)
+        self.state = State()
         self.state.create_board()
 
         self._num_passes = 0
@@ -56,12 +56,12 @@ class Game:
 
 
 from player import HumanPlayer
-from bradybots import BradyBot1_sus__amongus_moment
+from bradybots import BradyBot_Random, BradyBot_Only_Attack
 
-g = Game(BradyBot1_sus__amongus_moment, BradyBot1_sus__amongus_moment)
+g = Game(HumanPlayer, BradyBot_Only_Attack)
 
 g.run()
 
-print(type(g.winner).__name__, "won")
+print(type(g.winner).__name__, "({})".format(1 if g.players[1]==g.winner else 2), "won")
 
 
